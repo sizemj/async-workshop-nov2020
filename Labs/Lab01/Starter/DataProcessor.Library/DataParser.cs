@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DataProcessor.Library
 {
@@ -12,7 +13,7 @@ namespace DataProcessor.Library
             this.logger = logger ?? new NullLogger();
         }
 
-        public IReadOnlyCollection<Person> ParseData(IEnumerable<string> data)
+        public async Task<IReadOnlyCollection<Person>> ParseData(IEnumerable<string> data)
         {
             var processedRecords = new List<Person>();
             foreach (var record in data)
@@ -20,28 +21,28 @@ namespace DataProcessor.Library
                 var fields = record.Split(',');
                 if (fields.Length != 6)
                 {
-                    logger.LogMessage("Wrong number of fields in record", record);
+                   await logger.LogMessage("Wrong number of fields in record", record).ConfigureAwait(false);
                     continue;
                 }
 
                 int id;
                 if (!Int32.TryParse(fields[0], out id))
                 {
-                    logger.LogMessage("Cannot parse Id field", record);
+                    await logger.LogMessage("Cannot parse Id field", record).ConfigureAwait(false);
                     continue;
                 }
 
                 DateTime startDate;
                 if (!DateTime.TryParse(fields[3], out startDate))
                 {
-                    logger.LogMessage("Cannot parse Start Date field", record);
+                    await logger.LogMessage("Cannot parse Start Date field", record).ConfigureAwait(false);
                     continue;
                 }
 
                 int rating;
                 if (!Int32.TryParse(fields[4], out rating))
                 {
-                    logger.LogMessage("Cannot parse Rating field", record);
+                    await logger.LogMessage("Cannot parse Rating field", record).ConfigureAwait(false);
                     continue;
                 }
 

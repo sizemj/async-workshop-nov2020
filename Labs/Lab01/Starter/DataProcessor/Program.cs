@@ -2,17 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DataProcessor
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var records = ProcessData();
+            var records = await ProcessData().ConfigureAwait(false);
 
             Console.WriteLine($"Successfully processed {records.Count()} records");
-            foreach(var person in records)
+            foreach (var person in records)
             {
                 Console.WriteLine(person);
             }
@@ -20,14 +21,14 @@ namespace DataProcessor
             Console.ReadLine();
         }
 
-        static IReadOnlyCollection<Person> ProcessData()
+        static async Task<IReadOnlyCollection<Person>> ProcessData()
         {
             var loader = new DataLoader();
             IReadOnlyCollection<string> data = loader.LoadData();
 
             var logger = new FileLogger();
             var parser = new DataParser(logger);
-            var records = parser.ParseData(data);
+            var records = await parser.ParseData(data).ConfigureAwait(false);
             return records;
         }
     }

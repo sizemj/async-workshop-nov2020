@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace DataProcessor.Library
 {
@@ -19,12 +20,11 @@ namespace DataProcessor.Library
             }
         }
 
-        public void LogMessage(string message, string data)
+        public async  Task LogMessage(string message, string data)
         {
             using (var writer = new StreamWriter(logPath, true))
             {
-                writer.WriteLine(
-                    $"{DateTime.Now:s}: {message} - {data}");
+                await writer.WriteLineAsync($"{DateTime.Now:s}: {message} - {data}").ConfigureAwait(false);
             }
         }
     }
